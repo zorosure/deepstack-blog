@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getPost, posts } from "../../../lib/posts";
+import { renderInlineMarkdown } from "../../../lib/markdown";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -62,10 +63,10 @@ export default async function PostPage({ params }: PageProps) {
           <div className="article-content">
             {post.sections.map((section, index) => (
               <section id={`section-${index + 1}`} key={index}>
-                {section.heading && <h2>{section.heading}</h2>}
-                {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-                {section.points && <ul>{section.points.map((point) => <li key={point}>{point}</li>)}</ul>}
-                {section.quote && <blockquote>{section.quote}</blockquote>}
+                {section.heading && <h2 dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(section.heading) }} />}
+                {section.paragraphs.map((paragraph) => <p key={paragraph} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(paragraph) }} />)}
+                {section.points && <ul>{section.points.map((point) => <li key={point} dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(point) }} />)}</ul>}
+                {section.quote && <blockquote dangerouslySetInnerHTML={{ __html: renderInlineMarkdown(section.quote) }} />}
               </section>
             ))}
           </div>

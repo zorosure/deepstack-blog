@@ -24,12 +24,20 @@ test("server renders the Deepstack home page", async () => {
 test("GitHub Pages output contains home, articles, and social card", async () => {
   const home = await readFile(new URL("../pages-dist/index.html", import.meta.url), "utf8");
   const article = await readFile(new URL("../pages-dist/posts/keep-cognitive-friction/index.html", import.meta.url), "utf8");
+  const admin = await readFile(new URL("../pages-dist/admin/index.html", import.meta.url), "utf8");
   assert.match(home, /DEEPSTACK NOTES/);
   assert.match(home, /独立技术写作/);
   assert.doesNotMatch(home, /href=["']https?:\/\/github\.com/);
+  assert.doesNotMatch(home, /href=["'][^"']*\/admin\/?["']/);
   assert.match(home, /posts\/keep-cognitive-friction\//);
   assert.match(article, /保留四个停顿点/);
   assert.match(article, /NEXT NOTE/);
+  assert.match(admin, /上传一篇/);
+  assert.match(admin, /admin\.js/);
+  assert.match(admin, /noindex,nofollow/);
+  const adminScript = await readFile(new URL("../pages-dist/admin.js", import.meta.url), "utf8");
+  assert.match(adminScript, /const ADMIN = "zorosure"/);
+  assert.doesNotMatch(adminScript, /localStorage|sessionStorage/);
   await access(new URL("../pages-dist/og.png", import.meta.url));
   await access(new URL("../pages-dist/.nojekyll", import.meta.url));
 });

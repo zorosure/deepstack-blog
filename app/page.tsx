@@ -47,7 +47,7 @@ export default function Home() {
       <section className="latest shell" id="notes">
         <div className="latest-head">
           <div><p className="eyebrow"><span /> LATEST NOTES</p><h2>最近记录</h2></div>
-          <a href="#notes">查看全部 03 篇 <span>→</span></a>
+          <a href="#notes">查看全部 {String(posts.length).padStart(2, "0")} 篇 <span>→</span></a>
         </div>
         <div className="note-list">
           {notes.map((note) => (
