@@ -1,6 +1,6 @@
 import { cpSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
-import { posts } from "../lib/posts";
+import { posts } from "../lib/posts.ts";
 
 const output = join(process.cwd(), "pages-dist");
 const repository = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "";
