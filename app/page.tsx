@@ -11,7 +11,7 @@ export default function Home() {
           <span><strong>深栈</strong><small>DEEPSTACK NOTES</small></span>
         </a>
         <nav aria-label="主导航"><a href="#writing">文章</a><a href="#topics">专题</a><a href="#about">关于</a></nav>
-        <a className="github-link" href="#about">GitHub <span aria-hidden="true">↗</span></a>
+        <span className="site-note">独立技术写作</span>
       </header>
 
       <section className="hero shell" id="top">

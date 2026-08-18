@@ -25,6 +25,8 @@ test("GitHub Pages output contains home, articles, and social card", async () =>
   const home = await readFile(new URL("../pages-dist/index.html", import.meta.url), "utf8");
   const article = await readFile(new URL("../pages-dist/posts/keep-cognitive-friction/index.html", import.meta.url), "utf8");
   assert.match(home, /DEEPSTACK NOTES/);
+  assert.match(home, /独立技术写作/);
+  assert.doesNotMatch(home, /href=["']https?:\/\/github\.com/);
   assert.match(home, /posts\/keep-cognitive-friction\//);
   assert.match(article, /保留四个停顿点/);
   assert.match(article, /NEXT NOTE/);

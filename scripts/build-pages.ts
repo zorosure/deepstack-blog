@@ -21,7 +21,7 @@ function siteHeader(extra = "") {
   return `<header class="site-header shell ${extra}">
   <a class="brand" href="${base}/" aria-label="深栈首页"><span class="brand-mark">深</span><span><strong>深栈</strong><small>DEEPSTACK NOTES</small></span></a>
   <nav aria-label="主导航"><a href="${base}/#writing">文章</a><a href="${base}/#topics">专题</a><a href="${base}/#about">关于</a></nav>
-  <a class="github-link" href="https://github.com/" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+  <span class="site-note">独立技术写作</span>
 </header>`;
 }
 
