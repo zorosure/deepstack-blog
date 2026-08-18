@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "发布文章｜深栈",
@@ -12,11 +13,11 @@ export default function AdminPage() {
   return (
     <main className="admin-page">
       <header className="site-header shell article-nav">
-        <a className="brand" href="/" aria-label="返回深栈首页">
+        <Link className="brand" href="/" aria-label="返回深栈首页">
           <span className="brand-mark">深</span>
           <span><strong>深栈</strong><small>DEEPSTACK NOTES</small></span>
-        </a>
-        <a className="back-link" href="/">← 返回博客</a>
+        </Link>
+        <Link className="back-link" href="/">← 返回博客</Link>
         <span className="issue">ADMIN ONLY</span>
       </header>
 
@@ -27,11 +28,17 @@ export default function AdminPage() {
           <p>选择文章、确认信息，然后直接发布。这个入口不出现在公开导航中，写入操作只允许管理员账号完成。</p>
         </div>
 
-        <form className="publish-panel" id="publish-form">
-          <div className="admin-step"><span>01</span><div><strong>准备令牌</strong><p>使用仅授权本仓库、Contents 为 Read and write 的 GitHub 细粒度令牌。令牌只在本次发布时使用，不会保存。</p></div></div>
-          <label className="field-label" htmlFor="admin-token">细粒度令牌</label>
-          <input className="admin-input" id="admin-token" type="password" autoComplete="off" spellCheck={false} placeholder="github_pat_…" required />
+        <div className="publish-panel">
+          <section className="auth-gate" id="auth-gate">
+            <div className="admin-step"><span>01</span><div><strong>管理员登录</strong><p>使用 GitHub 确认身份。浏览器不会接触或保存仓库令牌，发布权限由服务端的私有 GitHub App 管理。</p></div></div>
+            <div className="auth-card">
+              <div><small>SECURE SESSION</small><strong id="auth-title">正在检查登录状态…</strong><p id="auth-description">请稍候。</p></div>
+              <a className="publish-button auth-button" id="github-login" href="/api/auth/github" hidden>使用 GitHub 登录 <span>→</span></a>
+              <button className="secondary-button auth-button" id="logout-button" type="button" hidden>退出登录</button>
+            </div>
+          </section>
 
+          <form id="publish-form" hidden>
           <div className="admin-step"><span>02</span><div><strong>选择文章</strong><p>文件名使用英文小写和短横线，例如 <code>how-i-debug.md</code>。</p></div></div>
           <label className="file-drop" htmlFor="markdown-file">
             <input id="markdown-file" type="file" accept=".md,text/markdown,text/plain" required />
@@ -39,7 +46,7 @@ export default function AdminPage() {
           </label>
 
           <div className="article-preview" id="article-preview" hidden>
-            <span>READY TO PUBLISH</span><h2 id="preview-title" /><p id="preview-meta" /><p id="preview-excerpt" />
+            <span>READY TO PUBLISH</span><h2 id="preview-title">文章标题</h2><p id="preview-meta" /><p id="preview-excerpt" />
           </div>
 
           <div className="publish-actions">
@@ -47,7 +54,8 @@ export default function AdminPage() {
             <button type="submit" className="publish-button" id="publish-button">验证并发布 <span>→</span></button>
           </div>
           <p className="publish-status" id="publish-status" role="status" aria-live="polite" />
-        </form>
+          </form>
+        </div>
       </section>
       <script src="/admin.js" defer />
     </main>

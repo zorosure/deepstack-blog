@@ -7,6 +7,7 @@ const output = join(process.cwd(), "pages-dist");
 const repository = process.env.GITHUB_REPOSITORY?.split("/")[1] ?? "";
 const inferredBase = repository.endsWith(".github.io") ? "" : repository ? `/${repository}` : "";
 const base = (process.env.PAGES_BASE_PATH ?? inferredBase).replace(/\/$/, "");
+const adminBackendUrl = (process.env.ADMIN_BACKEND_URL ?? "https://deepstack-publisher-zoro.zys007089.chatgpt.site").replace(/\/$/, "");
 const posts = loadPosts();
 
 function escapeHtml(value: string) {
@@ -54,14 +55,13 @@ function postHtml(slug: string) {
 }
 
 function adminHtml() {
+  const destination = adminBackendUrl ? `${adminBackendUrl}/admin` : "";
+  const redirect = destination ? `<meta http-equiv="refresh" content="0;url=${escapeHtml(destination)}"><script>location.replace(${JSON.stringify(destination)})</script>` : "";
   return page("发布文章｜深栈", "深栈管理员 Markdown 发布入口", `<main class="admin-page">
 <header class="site-header shell article-nav"><a class="brand" href="${base}/" aria-label="返回深栈首页"><span class="brand-mark">深</span><span><strong>深栈</strong><small>DEEPSTACK NOTES</small></span></a><a class="back-link" href="${base}/">← 返回博客</a><span class="issue">ADMIN ONLY</span></header>
-<section class="admin-shell shell"><div class="admin-intro"><p class="eyebrow"><span></span> PUBLISHING DESK</p><h1>上传一篇<br>Markdown</h1><p>选择文章、确认信息，然后直接发布。这个入口不出现在公开导航中，写入操作只允许管理员账号完成。</p></div>
-<form class="publish-panel" id="publish-form"><div class="admin-step"><span>01</span><div><strong>准备令牌</strong><p>使用仅授权本仓库、Contents 为 Read and write 的 GitHub 细粒度令牌。令牌只在本次发布时使用，不会保存。</p></div></div><label class="field-label" for="admin-token">细粒度令牌</label><input class="admin-input" id="admin-token" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…" required>
-<div class="admin-step"><span>02</span><div><strong>选择文章</strong><p>文件名使用英文小写和短横线，例如 <code>how-i-debug.md</code>。</p></div></div><label class="file-drop" for="markdown-file"><input id="markdown-file" type="file" accept=".md,text/markdown,text/plain" required><b>选择 Markdown 文件</b><small id="file-name">尚未选择文件</small></label>
-<div class="article-preview" id="article-preview" hidden><span>READY TO PUBLISH</span><h2 id="preview-title"></h2><p id="preview-meta"></p><p id="preview-excerpt"></p></div>
-<div class="publish-actions"><button type="button" class="secondary-button" id="download-template">下载文章模板</button><button type="submit" class="publish-button" id="publish-button">验证并发布 <span>→</span></button></div><p class="publish-status" id="publish-status" role="status" aria-live="polite"></p></form></section>
-<script src="${base}/admin.js" defer></script></main>`, '<meta name="robots" content="noindex,nofollow">');
+<section class="admin-shell shell"><div class="admin-intro"><p class="eyebrow"><span></span> SECURE PUBLISHING DESK</p><h1>正在前往<br>发布后台</h1><p>Markdown 发布已经迁移到带服务端鉴权的安全入口，不再要求在浏览器中粘贴令牌。</p></div>
+<div class="publish-panel"><div class="admin-step"><span>01</span><div><strong>${destination ? "即将自动跳转" : "后台正在初始化"}</strong><p>${destination ? "如果没有自动打开，请点击下面的按钮。" : "部署完成后，这里会自动连接新的发布后台。"}</p></div></div>${destination ? `<a class="publish-button setup-button" href="${escapeHtml(destination)}">进入发布后台 <span>→</span></a>` : ""}</div></section>
+${redirect}</main>`, '<meta name="robots" content="noindex,nofollow">');
 }
 
 function emit(path: string, content: string) {
@@ -78,5 +78,4 @@ emit("admin/index.html", adminHtml());
 emit("404.html", page("页面未找到｜深栈", "页面未找到", `<main class="shell" style="padding:12vh 0"><a class="brand" href="${base}/"><span class="brand-mark">深</span><span><strong>深栈</strong></span></a><h1 style="margin-top:12vh">404</h1><p class="hero-intro">这篇笔记还不存在。<br><a href="${base}/" class="read-more">返回首页 →</a></p></main>`));
 emit(".nojekyll", "");
 cpSync(join(process.cwd(), "public/og.jpg"), join(output, "og.jpg"));
-cpSync(join(process.cwd(), "public/admin.js"), join(output, "admin.js"));
 console.log(`GitHub Pages site generated at ${output}${base ? ` with base ${base}` : ""}`);

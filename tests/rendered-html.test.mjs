@@ -33,12 +33,13 @@ test("GitHub Pages output contains home, articles, and social card", async () =>
   assert.match(home, /posts\/keep-cognitive-friction\//);
   assert.match(article, /保留四个停顿点/);
   assert.match(article, /NEXT NOTE/);
-  assert.match(admin, /上传一篇/);
-  assert.match(admin, /admin\.js/);
+  assert.match(admin, /发布后台/);
+  assert.doesNotMatch(admin, /github_pat_|细粒度令牌/);
   assert.match(admin, /noindex,nofollow/);
-  const adminScript = await readFile(new URL("../pages-dist/admin.js", import.meta.url), "utf8");
-  assert.match(adminScript, /const ADMIN = "zorosure"/);
-  assert.doesNotMatch(adminScript, /localStorage|sessionStorage/);
+  const adminScript = await readFile(new URL("../public/admin.js", import.meta.url), "utf8");
+  assert.match(adminScript, /\/api\/auth\/session/);
+  assert.match(adminScript, /\/api\/posts/);
+  assert.doesNotMatch(adminScript, /github_pat_|localStorage|sessionStorage/);
   await access(new URL("../pages-dist/og.jpg", import.meta.url));
   await access(new URL("../pages-dist/.nojekyll", import.meta.url));
 });

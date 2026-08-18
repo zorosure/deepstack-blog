@@ -1,10 +1,11 @@
 (() => {
-  const ADMIN = "zorosure";
-  const REPOSITORY = "zorosure/deepstack-blog";
   const form = document.querySelector("#publish-form");
   if (!form) return;
 
-  const tokenInput = document.querySelector("#admin-token");
+  const authTitle = document.querySelector("#auth-title");
+  const authDescription = document.querySelector("#auth-description");
+  const loginButton = document.querySelector("#github-login");
+  const logoutButton = document.querySelector("#logout-button");
   const fileInput = document.querySelector("#markdown-file");
   const fileName = document.querySelector("#file-name");
   const preview = document.querySelector("#article-preview");
@@ -57,27 +58,29 @@ readTime: 6 分钟阅读
     status.dataset.kind = kind;
   }
 
-  function toBase64(source) {
-    const bytes = new TextEncoder().encode(source);
-    let binary = "";
-    for (let start = 0; start < bytes.length; start += 0x8000) {
-      binary += String.fromCharCode(...bytes.subarray(start, start + 0x8000));
+  async function loadSession() {
+    try {
+      const response = await fetch("/api/auth/session", { credentials: "same-origin", cache: "no-store" });
+      const session = await response.json();
+      if (!session.configured) {
+        authTitle.textContent = "发布后台尚未初始化";
+        authDescription.textContent = "请使用部署时生成的一次性初始化链接，创建并安装私有 GitHub App。";
+        return;
+      }
+      if (!session.authenticated) {
+        authTitle.textContent = "等待管理员登录";
+        authDescription.textContent = "GitHub 只会授权已安装此私有应用的仓库；登录完成后即可发布。";
+        loginButton.hidden = false;
+        return;
+      }
+      authTitle.textContent = `已登录：${session.login}`;
+      authDescription.textContent = "安全会话已建立，可以上传 Markdown。";
+      logoutButton.hidden = false;
+      form.hidden = false;
+    } catch {
+      authTitle.textContent = "无法连接发布服务";
+      authDescription.textContent = "请刷新页面后重试。";
     }
-    return btoa(binary);
-  }
-
-  async function github(path, token, options = {}) {
-    const response = await fetch(`https://api.github.com${path}`, {
-      ...options,
-      headers: {
-        Accept: "application/vnd.github+json",
-        Authorization: `Bearer ${token}`,
-        "X-GitHub-Api-Version": "2026-03-10",
-        ...(options.headers || {}),
-      },
-    });
-    const data = await response.json().catch(() => ({}));
-    return { response, data };
   }
 
   fileInput.addEventListener("change", async () => {
@@ -109,38 +112,35 @@ readTime: 6 分钟阅读
     URL.revokeObjectURL(url);
   });
 
+  logoutButton.addEventListener("click", async () => {
+    logoutButton.disabled = true;
+    await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+    window.location.reload();
+  });
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const file = fileInput.files[0];
-    const token = tokenInput.value.trim();
-    tokenInput.value = "";
-    if (!file || !token) return setStatus("请填写令牌并选择 Markdown 文件", "error");
+    if (!file) return setStatus("请选择 Markdown 文件", "error");
 
     publishButton.disabled = true;
-    setStatus("正在验证管理员身份…", "working");
+    setStatus("正在验证文章并发布…", "working");
     try {
       const source = await file.text();
       parseMarkdown(source, file.name);
-
-      const identity = await github("/user", token);
-      if (!identity.response.ok) throw new Error("令牌无效或已过期");
-      if (identity.data.login !== ADMIN) throw new Error(`当前令牌属于 ${identity.data.login}，只有管理员 ${ADMIN} 可以发布`);
-
-      const path = `content/posts/${file.name}`;
-      setStatus("身份验证通过，正在发布文章…", "working");
-      const existing = await github(`/repos/${REPOSITORY}/contents/${path}`, token);
-      if (!existing.response.ok && existing.response.status !== 404) throw new Error(existing.data.message || "无法检查文章状态");
-
-      const uploaded = await github(`/repos/${REPOSITORY}/contents/${path}`, token, {
-        method: "PUT",
-        body: JSON.stringify({
-          message: `${existing.response.ok ? "Update" : "Publish"} article: ${file.name}`,
-          content: toBase64(source),
-          branch: "main",
-          ...(existing.response.ok ? { sha: existing.data.sha } : {}),
-        }),
+      const uploaded = await fetch("/api/posts", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ filename: file.name, content: source }),
       });
-      if (!uploaded.response.ok) throw new Error(uploaded.data.message || "发布失败");
+      const result = await uploaded.json().catch(() => ({}));
+      if (uploaded.status === 401) {
+        form.hidden = true;
+        loginButton.hidden = false;
+        throw new Error("登录会话已过期，请重新使用 GitHub 登录");
+      }
+      if (!uploaded.ok) throw new Error(result.error || "发布失败");
 
       form.reset();
       preview.hidden = true;
@@ -152,4 +152,6 @@ readTime: 6 分钟阅读
       publishButton.disabled = false;
     }
   });
+
+  loadSession();
 })();

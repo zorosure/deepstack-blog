@@ -157,6 +157,18 @@ footer { background:var(--ink); color:white; }
 .admin-intro h1 { font-size:clamp(52px,6vw,78px); }
 .admin-intro>p:last-child { max-width:440px; margin:34px 0 0; color:var(--muted); font-size:15px; line-height:1.9; }
 .publish-panel { padding:42px; border:1px solid var(--ink); background:#faf8f2; }
+.auth-gate { padding-bottom:6px; }
+.auth-card { display:flex; align-items:center; justify-content:space-between; gap:22px; min-height:116px; padding:22px 24px; border:1px solid var(--rule); border-radius:18px; background:rgba(255,255,255,.55); }
+.auth-card>div { min-width:0; }
+.auth-card small,.auth-card strong,.auth-card p { display:block; }
+.auth-card small { margin-bottom:9px; color:var(--gold); font:9px/1 monospace; letter-spacing:.14em; }
+.auth-card strong { font-family:serif; font-size:19px; }
+.auth-card p { margin:7px 0 0; color:var(--muted); font-size:11px; line-height:1.6; }
+.auth-button { flex:none; min-height:44px; padding:0 16px; border-radius:999px; white-space:nowrap; cursor:pointer; font:12px/1 sans-serif; }
+.auth-button[hidden] { display:none; }
+.setup-button { width:100%; min-height:50px; justify-content:space-between; margin-top:32px; padding:0 20px; border-radius:999px; cursor:pointer; }
+.publish-panel>form[hidden] { display:none; }
+.publish-panel>form>.admin-step { margin-top:42px; padding-top:36px; border-top:1px solid var(--rule); }
 .admin-step { display:grid; grid-template-columns:44px 1fr; gap:18px; padding:0 0 24px; }
 .admin-step:not(:first-child) { margin-top:42px; padding-top:36px; border-top:1px solid var(--rule); }
 .admin-step>span { width:32px; height:32px; display:grid; place-items:center; background:var(--blue); color:white; font:10px/1 monospace; }
@@ -191,6 +203,8 @@ footer { background:var(--ink); color:white; }
   .admin-shell { grid-template-columns:1fr; gap:55px; padding:55px 0 80px; }
   .admin-intro { position:static; }
   .publish-panel { padding:28px 20px; }
+  .auth-card { align-items:stretch; flex-direction:column; }
+  .auth-button { display:flex; align-items:center; justify-content:center; width:100%; }
   .publish-actions { flex-direction:column-reverse; }
   .publish-actions button { width:100%; justify-content:center; }
 }

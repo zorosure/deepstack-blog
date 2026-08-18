@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPost, posts } from "../../../lib/posts";
 import { renderInlineMarkdown } from "../../../lib/markdown";
@@ -31,11 +32,11 @@ export default async function PostPage({ params }: PageProps) {
   return (
     <main className="article-page">
       <header className="site-header shell article-nav">
-        <a className="brand" href="/" aria-label="返回深栈首页">
+        <Link className="brand" href="/" aria-label="返回深栈首页">
           <span className="brand-mark">深</span>
           <span><strong>深栈</strong><small>DEEPSTACK NOTES</small></span>
-        </a>
-        <a className="back-link" href="/">← 返回文章列表</a>
+        </Link>
+        <Link className="back-link" href="/">← 返回文章列表</Link>
         <span className="issue">NOTE {post.number}</span>
       </header>
 
