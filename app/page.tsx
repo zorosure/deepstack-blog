@@ -16,7 +16,7 @@ export default function Home() {
 
       <section className="hero shell" id="top">
         <div className="hero-cover">
-          <img src="/og.png" alt="深栈奇幻技术编年史：奥术典籍与远方浮空城堡" />
+          <img src="/og.jpg" alt="深栈奇幻技术编年史：奥术典籍与远方浮空城堡" />
         </div>
         <div className="hero-copy">
           <p className="eyebrow"><span /> THE ENGINEER&apos;S CHRONICLE</p>

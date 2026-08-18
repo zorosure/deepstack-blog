@@ -6,7 +6,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const incoming = await headers();
   const host = incoming.get("host") ?? "localhost:3000";
   const protocol = incoming.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const socialImage = `${protocol}://${host}/og.png`;
+  const socialImage = `${protocol}://${host}/og.jpg`;
   const title = "深栈｜工程、AI 与系统思考";
   const description = "记录真实工程问题、源码阅读与 AI 编程实践。";
   return {

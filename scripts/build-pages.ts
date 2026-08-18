@@ -18,7 +18,7 @@ function page(title: string, description: string, body: string, extraHead = "") 
   return `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escapeHtml(title)}</title><meta name="description" content="${escapeHtml(description)}">
-<meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:image" content="${base}/og.png">
+<meta property="og:title" content="${escapeHtml(title)}"><meta property="og:description" content="${escapeHtml(description)}"><meta property="og:image" content="${base}/og.jpg">
 <meta name="twitter:card" content="summary_large_image">${extraHead}<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23151817%22/><text x=%2250%22 y=%2268%22 text-anchor=%22middle%22 font-size=%2260%22 fill=%22%23d7ff3f%22>深</text></svg>">
 <style>${css}</style></head><body>${body}</body></html>`;
 }
@@ -35,7 +35,7 @@ function homeHtml() {
   const [featured, ...notes] = posts;
   return page("深栈｜工程、AI 与系统思考", "记录真实工程问题、源码阅读与 AI 编程实践。", `<main>
 ${siteHeader()}
-<section class="hero shell" id="top"><div class="hero-cover"><img src="${base}/og.png" alt="深栈奇幻技术编年史：奥术典籍与远方浮空城堡"></div><div class="hero-copy"><p class="eyebrow"><span></span> THE ENGINEER'S CHRONICLE</p><h1>把复杂技术，<br>写成清晰判断。</h1><p class="hero-intro">记录真实工程问题、源码阅读与 AI 编程实践。<br>不贩卖捷径，只沉淀经过验证的经验。</p></div><div class="hero-aside"><span class="issue">CHRONICLE 001</span><div class="rune-seal" aria-hidden="true">✦</div><p>深度不是知道更多，<br>而是多问一层为什么。</p></div></section>
+<section class="hero shell" id="top"><div class="hero-cover"><img src="${base}/og.jpg" alt="深栈奇幻技术编年史：奥术典籍与远方浮空城堡"></div><div class="hero-copy"><p class="eyebrow"><span></span> THE ENGINEER'S CHRONICLE</p><h1>把复杂技术，<br>写成清晰判断。</h1><p class="hero-intro">记录真实工程问题、源码阅读与 AI 编程实践。<br>不贩卖捷径，只沉淀经过验证的经验。</p></div><div class="hero-aside"><span class="issue">CHRONICLE 001</span><div class="rune-seal" aria-hidden="true">✦</div><p>深度不是知道更多，<br>而是多问一层为什么。</p></div></section>
 <section class="featured shell" id="writing"><div class="section-label"><span>本期精选</span><b>FEATURED STORY</b></div><article class="featured-card"><div class="feature-visual"><div class="code-lines"><span>ASK</span><span>TRACE</span><span>VERIFY</span><span>WRITE</span></div><div class="feature-number">01</div></div><div class="feature-content"><span class="tag">${escapeHtml(featured.category)}</span><h2>${escapeHtml(featured.title)}</h2><p>${escapeHtml(featured.excerpt)}</p><div class="meta"><time>${escapeHtml(featured.date)}</time><span>${escapeHtml(featured.readTime)}</span></div><a href="${base}/posts/${featured.slug}/" class="read-more">阅读全文 <span>→</span></a></div></article></section>
 <section class="latest shell" id="notes"><div class="latest-head"><div><p class="eyebrow"><span></span> LATEST NOTES</p><h2>最近记录</h2></div><a href="#notes">查看全部 ${String(posts.length).padStart(2, "0")} 篇 <span>→</span></a></div><div class="note-list">${notes.map((note) => `<article class="note"><span class="note-index">${note.number}</span><div class="note-body"><span class="tag">${escapeHtml(note.category)}</span><h3>${escapeHtml(note.title)}</h3><p>${escapeHtml(note.excerpt)}</p></div><time>${escapeHtml(note.date)}</time><a href="${base}/posts/${note.slug}/" aria-label="阅读：${escapeHtml(note.title)}">↗</a></article>`).join("")}</div></section>
 <section class="topics shell" id="topics"><p class="eyebrow"><span></span> TOPICS</p><div class="topic-row"><span>AI 工程</span><span>系统设计</span><span>源码阅读</span><span>成长方法</span></div></section>
@@ -77,6 +77,6 @@ for (const post of posts) emit(`posts/${post.slug}/index.html`, postHtml(post.sl
 emit("admin/index.html", adminHtml());
 emit("404.html", page("页面未找到｜深栈", "页面未找到", `<main class="shell" style="padding:12vh 0"><a class="brand" href="${base}/"><span class="brand-mark">深</span><span><strong>深栈</strong></span></a><h1 style="margin-top:12vh">404</h1><p class="hero-intro">这篇笔记还不存在。<br><a href="${base}/" class="read-more">返回首页 →</a></p></main>`));
 emit(".nojekyll", "");
-cpSync(join(process.cwd(), "public/og.png"), join(output, "og.png"));
+cpSync(join(process.cwd(), "public/og.jpg"), join(output, "og.jpg"));
 cpSync(join(process.cwd(), "public/admin.js"), join(output, "admin.js"));
 console.log(`GitHub Pages site generated at ${output}${base ? ` with base ${base}` : ""}`);
