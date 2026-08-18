@@ -15,14 +15,17 @@ export default function Home() {
       </header>
 
       <section className="hero shell" id="top">
+        <div className="hero-cover">
+          <img src="/og.png" alt="深栈奇幻技术编年史：奥术典籍与远方浮空城堡" />
+        </div>
         <div className="hero-copy">
-          <p className="eyebrow"><span /> ENGINEERING · AI · SYSTEMS</p>
+          <p className="eyebrow"><span /> THE ENGINEER&apos;S CHRONICLE</p>
           <h1>把复杂技术，<br />写成清晰判断。</h1>
           <p className="hero-intro">记录真实工程问题、源码阅读与 AI 编程实践。<br />不贩卖捷径，只沉淀经过验证的经验。</p>
         </div>
         <div className="hero-aside" aria-label="博客理念">
-          <span className="issue">ISSUE 001</span>
-          <div className="orbit" aria-hidden="true"><i /><i /><i /></div>
+          <span className="issue">CHRONICLE 001</span>
+          <div className="rune-seal" aria-hidden="true">✦</div>
           <p>深度不是知道更多，<br />而是多问一层为什么。</p>
         </div>
       </section>

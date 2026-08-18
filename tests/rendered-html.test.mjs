@@ -29,6 +29,7 @@ test("GitHub Pages output contains home, articles, and social card", async () =>
   assert.match(home, /独立技术写作/);
   assert.doesNotMatch(home, /href=["']https?:\/\/github\.com/);
   assert.doesNotMatch(home, /href=["'][^"']*\/admin\/?["']/);
+  assert.match(home, /og\.png/);
   assert.match(home, /posts\/keep-cognitive-friction\//);
   assert.match(article, /保留四个停顿点/);
   assert.match(article, /NEXT NOTE/);
